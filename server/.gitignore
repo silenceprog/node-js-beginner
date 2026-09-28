@@ -1,0 +1,51 @@
+# Залежності
+/node_modules
+/jspm_packages
+
+# Проєкти збирання / Кеш
+/.npm
+/.eslintcache
+/.parcel-cache
+/.vite
+.next/
+out/
+dist/
+build/
+
+# Середовище та секрети (найважливіше!)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Логи
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Операційні системи
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Редактори та IDE (VS Code, WebStorm тощо)
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
