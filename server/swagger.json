@@ -1,0 +1,208 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Notes API",
+    "description": "REST API для управления заметками и пользователями",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000/api",
+      "description": "Локальный сервер"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Auth",
+      "description": "Авторизация и регистрация"
+    },
+    {
+      "name": "Notes",
+      "description": "Работа с заметками"
+    }
+  ],
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Регистрация пользователя",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterRequest"
+              },
+              "example": {
+                "email": "user@example.com",
+                "password": "Password123"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Пользователь успешно зарегистрирован",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Пользователь уже существует"
+          },
+          "400": {
+            "description": "Некорректные входные данные"
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Вход в аккаунт",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Успешный вход"
+          },
+          "401": {
+            "description": "Неверный email или пароль"
+          }
+        }
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Выход из аккаунта",
+        "description": "Завершает текущую сессию пользователя",
+        "responses": {
+          "204": {
+            "description": "Сессия успешно завершена"
+          },
+          "401": {
+            "description": "Пользователь не авторизован"
+          }
+        }
+      }
+    },
+    "/notes": {
+      "get": {
+        "tags": ["Notes"],
+        "summary": "Получить список заметок",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Список заметок",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Note"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Необходима авторизация"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "cookieAuth": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "sessionId"
+      }
+    },
+    "schemas": {
+      "RegisterRequest": {
+        "type": "object",
+        "required": ["email", "password"],
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "user@example.com"
+          },
+          "password": {
+            "type": "string",
+            "format": "password",
+            "minLength": 8,
+            "example": "Password123"
+          }
+        }
+      },
+      "LoginRequest": {
+        "type": "object",
+        "required": ["email", "password"],
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "format": "password"
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "671a12345678901234567890"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          }
+        }
+      },
+      "Note": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "671b12345678901234567890"
+          },
+          "title": {
+            "type": "string",
+            "example": "Моя первая заметка"
+          },
+          "content": {
+            "type": "string",
+            "example": "Текст заметки"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    }
+  }
+}

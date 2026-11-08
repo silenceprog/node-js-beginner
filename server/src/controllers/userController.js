@@ -1,0 +1,18 @@
+import { saveFileToCloudinary } from "../utils/saveFileToCloudinary.js";
+import { User } from "../models/user.js";
+
+export const updateUserAvatar = async (req, res) => {
+  const user = await User.findById(req.user._id);
+  console.log("REQ.USER:", req.user);
+  console.log("USER ID:", req.user?._id);
+  console.log("USER ID TYPE:", typeof req.user?._id);
+
+  console.log("FOUND USER:", user);
+  const result = await saveFileToCloudinary(req.file.buffer, req.user._id);
+  const updateUser = await User.findOneAndUpdate(
+    { _id: req.user._id },
+    { avatar: result.secure_url },
+    { returnDocument: "after" },
+  );
+  res.status(200).json({ url: updateUser.avatar });
+};
